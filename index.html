@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phil's Graduation and Celebratory Holiday</title>
+  <style>
+    :root {
+      --primary: #2c4a3e;
+      --primary-dark: #1f352c;
+      --accent: #c88a4b;
+      --bg: #f9f8f6;
+      --card: #ffffff;
+      --text: #2b2b2b;
+      --border: #dddad6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+    header {
+      background: linear-gradient(rgba(44, 74, 62, 0.85), rgba(44, 74, 62, 0.85)),
+                  url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1200&q=80') center/cover;
+      color: white; text-align: center; padding: 4rem 1.5rem;
+    }
+    header h1 { font-size: 3.2rem; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    header p { font-size: 1.1rem; opacity: 0.9; max-width: 1800px; margin: 0 auto; }
+    
+    /* Wide Widescreen Container */
+    .container {
+      width: 96%;
+      max-width: 1720px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .section-title {
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+      font-size: 1.65rem;
+      border-bottom: 3px solid var(--accent);
+      display: inline-block;
+      padding-bottom: 0.25rem;
+    }
+    
+    /* ITINERARY CARDS - 2 across on desktop */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Exactly two across */
+      gap: 1.6rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border-top: 5px solid var(--primary);
+      display: flex;
+      flex-direction: row; /* Horizontal alignment */
+      overflow: hidden;
+      min-height: 250px;
+    }
+    
+    /* Exactly 1/3 image space on the left */
+    .card-image-box {
+      width: 33.333%;
+      background-size: cover;
+      background-position: center;
+      background-color: #eeeae4;
+      border-right: 1px solid var(--border);
+    }
+    
+    /* Exactly 2/3 text space on the right */
+    .card-content-box {
+      width: 66.666%;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .card h3 { color: var(--primary); margin-bottom: 0.4rem; font-size: 1.2rem; }
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.2rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      align-self: flex-start;
+    }
+    .details-list { list-style: none; margin: 0.8rem 0; font-size: 0.92rem; }
+    .details-list li { margin-bottom: 0.4rem; }
+    .ext-link {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+      font-size: 0.92rem;
+    }
+    .ext-link:hover { color: var(--accent); }
+
+    /* Custom layout for the potential AirBnBs inside Card 2 to sit in two columns */
+    .airbnb-columns-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem 1.5rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Styled plane/flight callout banner */
+    .flight-note-banner {
+      background-color: #f0f4f2;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    
+    /* RSVP Table Panel */
+    .rsvp-panel {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 1.8rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      margin-bottom: 3.5rem;
+      overflow-x: auto;
+    }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 2.5rem;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    /* RSVP Grid/Table Styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      min-width: 1620px;
+      table-layout: fixed;
+    }
+    
+    /* Headings Centred horizontally and vertically */
+    th {
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+      vertical-align: middle;
+      padding: 1rem 0.65rem;
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.35;
+      border-right: 1px solid rgba(255,255,255,0.12);
+    }
+    th:last-child { border-right: none; }
+    td {
+      padding: 0.9rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+      vertical-align: middle;
+    }
+    tr:hover { background-color: #fcfbfa; }
+    .attendee-name { font-weight: 600; color: var(--primary); font-size: 0.96rem; }
+    
+    input[type="email"] {
+      width: 100%;
+      padding: 0.6rem 0.55rem;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 0.88rem;
+    }
+    input[type="email"]:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+    
+    select {
+      width: 100%;
+      padding: 0.55rem;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: center;
+    }
+    select.val-Yes { background-color: #e2f0d9; color: #385723; border-color: #a9d18e; }
+    select.val-No { background-color: #fce4d6; color: #c65911; border-color: #f4b084; }
+    select.val-None { background-color: #f2f4f3; color: #555555; border-color: var(--border); }
+    .btn-update {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.65rem 0.8rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.86rem;
+      width: 100%;
+      transition: background-color 0.2s;
+      white-space: nowrap;
+    }
+    .btn-update:hover { background-color: var(--primary-dark); }
+    .btn-update:disabled { background-color: #a5b5ae; cursor: not-allowed; }
+    .timestamp { font-size: 0.75rem; color: #777; display: block; margin-top: 0.3rem; text-align: center; }
+    .status-msg { font-size: 0.78rem; font-weight: 600; display: block; margin-top: 0.25rem; text-align: center; }
+    .status-success { color: #385723; }
+    .status-error { color: #c65911; }
+    @media (max-width: 900px) {
+      .cards { grid-template-columns: 1fr; } /* Stack on narrow mobile screens */
+      .card { flex-direction: column; }
+      .card-image-box { width: 100%; height: 180px; }
+      .card-content-box { width: 100%; }
+      header h1 { font-size: 2.2rem; }
+      .airbnb-columns-container { grid-template-columns: 1fr; gap: 0.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- 4-Part Banner Collage: Curtin University, Margaret River, Dining, Wine -->
+  <div class="banner-collage">
+    <div class="banner-panel panel-curtin" title="Curtin University Graduation"></div>
+    <div class="banner-panel panel-margs" title="Margaret River"></div>
+    <div class="banner-panel panel-dining" title="Celebratory Dining"></div>
+    <div class="banner-panel panel-wine" title="Margaret River Wine Region"></div>
+  </div>
+  <div class="banner-overlay"></div>
+  <div class="header-content">
+    <!-- Main Headline -->
+    <h1>Phil's Graduation and Celebratory Holiday</h1>
+    
+    <!-- Sub-Heading -->
+    <h2 style="font-size: 1.45rem; font-weight: 600; color: #f3e5d7; text-shadow: 0 1px 6px rgba(0,0,0,0.3); margin-top: 0.4rem; margin-bottom: 2rem; letter-spacing: 0.3px;">
+      Join us in Perth and Margaret River to celebrate together!
+    </h2>
+    
+    <!-- Welcome Blurb Box -->
+    <div class="welcome-blurb-embedded" style="max-width: 1800px; margin: 0 auto; text-align: center;">
+      <p>
+        After seven and a half years of part-time study, Phil has finally completed his <strong>Bachelor of Commerce (Finance &amp; Accounting)</strong> and it is time to head to Perth for the Graduation ceremony.
+        <br>
+        We would like you to join us for this occasion and a short stay in Margaret River to celebrate.
+      </p>
+      <br>
+      <p>
+        Please review the details below and let us know if you will be able to attend some or all of our journey. 
+        <br>
+        Please note some details cannot be locked in until numbers are confirmed.
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <h2 class="section-title">The Celebration Itinerary</h2>
+  <div class="cards">
+    <!-- Event 1: Graduation -->
+    <div class="card">
+      <div class="card-image-box" style="background-image: url('https://drive.google.com/thumbnail?id=19Ma7Q4KXrZ4Vmf-7KGEnDzOp7magqKTK&sz=w1000');"></div>
+      <div class="card-content-box">
+        <div>
+          <span class="badge">Wed 3 Feb 2027</span>
+          <h3>🎓 Graduation Ceremony</h3>
+          <p style="font-size:0.9rem; margin-top: 0.2rem;">Celebrating the big milestone under the evening sky at Curtin University Bentley Campus.</p>
+          <ul class="details-list">
+            <li><strong>Time:</strong> 6:30 pm – Late</li>
+            <li><strong>Location:</strong> Outdoors at The Forum, Curtin University</li>
+          </ul>
+        </div>
+        <a class="ext-link" href="https://maps.google.com/?q=The+Forum+Curtin+University+Kent+St+Bentley+WA+6102" target="_blank" rel="noopener">View Campus Map &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Event 2: Margaret River Accommodation -->
+    <div class="card">
+      <div class="card-image-box" style="background-image: url('https://drive.google.com/thumbnail?id=10AX7p4w-Vpr4OmO7aEAFHKgTj9A-HVRZ&sz=w1000');"></div>
+      <div class="card-content-box">
+        <div>
+          <span class="badge">Thu 4 Feb – Sun 7 Feb 2027</span>
+          <h3>🏡 Margaret River Stay</h3>
+          <p style="font-size:0.9rem; margin-top: 0.2rem;">
+            Three nights relaxing together in a spacious Margaret River country AirBnB.
+            We will lock in a location once we have numbers confirmed.
+            Depending on numbers, we may need two locations as availability is reducing quickly.
+          </p>
+          
+          <h4 style="margin-top: 0.8rem; color: var(--primary); font-size: 0.95rem; border-bottom: 1px solid var(--border); padding-bottom: 2px;">Potential AirBnB Locations:</h4>
+          
+          <div class="airbnb-columns-container">
+            <div>
+              <ul class="details-list" style="font-size: 0.88rem; margin: 0;">
+                <li>🏠 <a class="ext-link" href="https://www.airbnb.com.au/rooms/46322124?adults=12&check_in=2027-02-04&check_out=2027-02-07&children=0&infants=0&pets=0&wishlist_item_id=11007003424430&source_impression_id=p3_1794701902_P3lYu6hql8wQMp-J&previous_page_section_name=1000" target="_blank" rel="noopener">Caves Manor</a></li>
+                <li style="margin-top: 0.3rem;">🏠 <a class="ext-link" href="https://www.airbnb.com.au/rooms/27883606?adults=10&check_in=2027-02-04&check_out=2027-02-07&children=0&infants=0&pets=0&wishlist_item_id=11006179494541&source_impression_id=p3_1794702492_P3fFtpUacdvkww5S&previous_page_section_name=1000" target="_blank" rel="noopener">Margaret River Manor</a></li>
+              </ul>
+            </div>
+            <div>
+              <ul class="details-list" style="font-size: 0.88rem; margin: 0;">
+                <li>🏠 <a class="ext-link" href="https://www.airbnb.com.au/rooms/52678509?adults=10&check_in=2027-02-04&check_out=2027-02-07&children=0&infants=0&pets=0&wishlist_item_id=11006179476944&source_impression_id=p3_1794702492_P37b2SGFZ6QTCQpX&previous_page_section_name=1000" target="_blank" rel="noopener">Carpe Artes</a></li>
+                <li style="margin-top: 0.3rem;">🏠 <a class="ext-link" href="https://www.airbnb.com.au/rooms/44420704?adults=10&check_in=2027-02-04&check_out=2027-02-07&children=0&infants=0&pets=0&wishlist_item_id=11006179490253&source_impression_id=p3_1794702492_P3z3ia4lpPFRpsBJ&previous_page_section_name=1000" target="_blank" rel="noopener">Carpe Mykonos</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="flight-note-banner">
+            <span>✈️</span>
+            <span><strong>Jetstar</strong> operates Melbourne to Busselton Direct Wednesday, Friday &amp; Sunday (one flight each way per day)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event 3: Margaret River Celebratory Dinner -->
+    <div class="card">
+      <div class="card-image-box" style="background-image: url('https://drive.google.com/thumbnail?id=1v6rp4UeaPrB-DItx8UZIkGZOo9XE7syI&sz=w1000');"></div>
+      <div class="card-content-box">
+        <div>
+          <span class="badge">Thu 4 Feb 2027</span>
+          <h3>🥩 Celebratory Dinner in Margaret River</h3>
+          <p style="font-size:0.9rem; margin-top: 0.2rem;">Our first evening down in Margaret River, gathering together for a delicious celebratory dinner.</p>
+          <ul class="details-list">
+            <li><strong>Time:</strong> 6:30 pm – Late</li>
+            <li><strong>Location:</strong> Margaret River, WA</li>
+          </ul>
+        </div>
+        <span style="font-size:0.9rem; color:#777; font-style:italic;">Venue details TBC once numbers confirmed</span>
+      </div>
+    </div>
+
+    <!-- Event 4: Margaret River Wine Tour -->
+    <div class="card">
+      <div class="card-image-box" style="background-image: url('https://drive.google.com/thumbnail?id=1XYTWSO-HkWjTYAVmlmCOrH5Cyc6XsWAJ&sz=w1000');"></div>
+      <div class="card-content-box">
+        <div>
+          <span class="badge">Sat 6 Feb 2027</span>
+          <h3>🍷 Wine Tasting Tour</h3>
+          <p style="font-size:0.9rem; margin-top: 0.2rem;">
+            We are looking to book a private wine tasting journey visiting some of Margaret River's world-class vineyards. 
+            We estimate cost will be between $190 &amp; $250 per person and will confirm more details once we have confirmed numbers via your RSVP below.
+          </p>
+          <ul class="details-list">
+            <li><strong>Time:</strong> All Day (Times TBC)</li>
+            <li><strong>Location:</strong> Margaret River Vineyards</li>
+          </ul>
+        </div>
+        <span style="font-size:0.9rem; color:#777; font-style:italic;">Tour itinerary TBC once numbers confirmed</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title" style="margin-top: 1rem; margin-bottom: 1.5rem;">Pre Graduation | If you will be in Perth the weekend before the ceremony</h2>
+  
+  <!-- PRE-GRADUATION 2-ACROSS CARDS: Twenty Seats + Rottnest Island Tour -->
+  <div class="cards" style="margin-bottom: 4rem;">
+    <!-- Event 5: Twenty Seats -->
+    <div class="card">
+      <div class="card-image-box" style="background-image: url('https://drive.google.com/thumbnail?id=1GtB8sA5MOUif6gbUGF-AYA0wvuA0lI3z&sz=w1000');"></div>
+      <div class="card-content-box">
+        <div>
+          <span class="badge">Sat 30 Jan 2027</span>
+          <h3>🍽️ Proposed Degustation Dinner</h3>
+          <p style="font-size:0.9rem; margin-top: 0.2rem;">An intimate fine-dining degustation experience at Twenty Seats in Perth. This restaurant offers an exclusive dinner options with seats being released one month in advance. Please let us know by 30th November if you would like to attend as January dining opens on 1st December.</p>
+          <ul class="details-list">
+            <li><strong>Time:</strong> 6:30 pm – Late</li>
+            <li><strong>Venue:</strong> Twenty Seats, Highgate WA</li>
+          </ul>
+        </div>
+        <a class="ext-link" href="https://www.twentyseats.com.au/about/" target="_blank" rel="noopener">Explore Twenty Seats &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Event 6: Proposed Rottnest Island Tour -->
+    <div class="card">
+      <div class="card-image-box" style="background-image: url('https://drive.google.com/thumbnail?id=1xuto1e7mWybIzNTHHrAJu29fIFAN4r7n&sz=w1000');"></div>
+      <div class="card-content-box">
+        <div>
+          <span class="badge">Mon 1 Feb 2027</span>
+          <h3>🏝️ Proposed Rottnest Island Tour</h3>
+          <p style="font-size:0.9rem; margin-top: 0.2rem;">
+            We are proposing to visit Rottnest Island the Monday prior to the Graduation. Intention is to catch the ferry from North Fremantle (Northport) or Perth (Hillarys Harbour), and utilise The Island Explorer Bus (Hop On/Hop Off c$35pp) to tour the island.
+          </p>
+          <ul class="details-list">
+            <li><strong>Date:</strong> Monday 1st February</li>
+            <li><strong>Location:</strong> Rottnest Island, WA</li>
+            <li><strong>Time:</strong> All Day</li>
+          </ul>
+          <p style="font-size: 0.84rem; color: #777; font-style: italic; margin-top: 0.4rem;">This is a casual plan, with no set itinerary</p>
+        </div>
+        <a class="ext-link" href="https://www.rottnestisland.com/" target="_blank" rel="noopener" style="margin-top: 0.5rem;">Explore Rottnest Island &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Attendee RSVP Portal | Let us know which events you can attend</h2>
+  <p style="font-size: 0.98rem; margin-bottom: 1.2rem; color: #555;">
+    Locate your names below, enter/update your email address, select <strong>Yes</strong> or <strong>No</strong> for Itinerary option, and click <strong>Send or Update Calendar</strong>.
+  </p>
+
+  <div class="rsvp-panel">
+    <div id="loading" class="loading-spinner">🔄 Loading attendees from Tracking Sheet...</div>
+    <table id="rsvpTable" style="display: none;">
+      <colgroup>
+        <col style="width: 10%;">   <!-- Invited Attendees -->
+        <col style="width: 11.5%;"> <!-- Email 1 for Calendar Invite -->
+        <col style="width: 11.5%;"> <!-- Email 2 for Calendar Invite -->
+        <col style="width: 8.4%;">  <!-- Graduation Ceremony -->
+        <col style="width: 8.4%;">  <!-- Margaret River Stay -->
+        <col style="width: 8.4%;">  <!-- MR Dinner -->
+        <col style="width: 8.4%;">  <!-- Wine Tour -->
+        <col style="width: 8.4%;">  <!-- Twenty Seats -->
+        <col style="width: 8.4%;">  <!-- Rottnest Island Tour -->
+        <col style="width: 230px;"> <!-- Action Column -->
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Invited Attendees</th>
+          <th>Email 1<br>for<br>Calendar Invite</th>
+          <th>Email 2 (Optional)<br>for<br>Calendar Invite</th>
+          <th>Graduation Ceremony Wednesday 3rd February<br><br><small><em>Bentleigh - Perth</em></small></th>
+          <th>Margaret River Thursday 4th February to Sunday 7th February<br><br><small><em>Margaret River</em></small></th>
+          <th>Celebratory Dinner in Margaret River Thursday 4th February<br><br><small><em>Margaret River</em></small></th>
+          <th>Proposed Wine Tasting Tour Saturday 6th February<br><br><small><em>Margaret River</em></small></th>
+          <th>Proposed Twenty Seats Degustation Dinner Saturday 30th January<br><br><small><em>Highgate - Perth</em></small></th>
+          <th>Proposed Rottnest Island Tour Monday 1st February<br><br><small><em>Rottnest Island</em></small></th>
+          <th>Send or Update Calendar<br><br><small><em>All Invites will be received in Australian Western Standard Time</em></small></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Rows dynamically generated from Sheet -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Public Web App URL (PRE-CONFIGURED)
+  const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbybqUbXMZ_6gLYcS7aoxvZi8s06UGowz8HDZn8veBGWJ99p5awajGiwfZoPkNepSa-N/exec";
+
+  document.addEventListener("DOMContentLoaded", fetchAttendees);
+
+  async function fetchAttendees() {
+    try {
+      const response = await fetch(`${WEBHOOK_URL}?action=getAttendees`);
+      const resData = await response.json();
+      if (resData.status === "success") {
+        renderTable(resData.data);
+      } else {
+        document.getElementById("loading").innerHTML = "❌ Failed to retrieve attendee list: " + resData.message;
+      }
+    } catch (err) {
+      document.getElementById("loading").innerHTML = "❌ Error connecting to database. Please confirm deployment permissions.";
+      console.error(err);
+    }
+  }
+
+  /**
+   * Safeguard Filter: Ensures ONLY a valid single email address is shown in Email 1 or Email 2.
+   * If the Apps Script accidentally sends a comma-separated row of all columns, this extracts
+   * only the specific email column (colIndex 1 for Email 1, colIndex 2 for Email 2) or returns blank "".
+   */
+  function extractCleanEmail(rawValue, colIndex) {
+    if (!rawValue || rawValue === "undefined") return "";
+    const str = String(rawValue).trim();
+    if (!str.includes(",")) {
+      return str.includes("@") ? str : "";
+    }
+    const parts = str.split(",");
+    const candidate = (parts[colIndex] || "").trim();
+    return candidate.includes("@") ? candidate : "";
+  }
+
+  function renderTable(data) {
+    const body = document.getElementById("tableBody");
+    body.innerHTML = "";
+    
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.id = `row-${row.rowNumber}`;
+      
+      const cleanEmail1 = extractCleanEmail(row.email1, 1);
+      const cleanEmail2 = extractCleanEmail(row.email2, 2);
+      
+      tr.innerHTML = `
+        <td><span class="attendee-name">${row.attendees}</span></td>
+        <td><input type="email" id="email1-${row.rowNumber}" value="${cleanEmail1}" placeholder="Enter first email..."></td>
+        <td><input type="email" id="email2-${row.rowNumber}" value="${cleanEmail2}" placeholder="Enter second email (optional)..."></td>
+        <td>${createSelectMarkup('grad', row.rowNumber, row.grad)}</td>
+        <td>${createSelectMarkup('margs', row.rowNumber, row.margs)}</td>
+        <td>${createSelectMarkup('margsDinner', row.rowNumber, row.margsDinner)}</td>
+        <td>${createSelectMarkup('wine', row.rowNumber, row.wine)}</td>
+        <td>${createSelectMarkup('seats', row.rowNumber, row.seats)}</td>
+        <td>${createSelectMarkup('rottnest', row.rowNumber, row.rottnest)}</td>
+        <td>
+          <button class="btn-update" id="btn-${row.rowNumber}" onclick="updateRow(${row.rowNumber}, '${escapeHtml(row.attendees)}')">
+            Send or Update Calendar
+          </button>
+          <span class="timestamp" id="time-${row.rowNumber}">${row.lastUpdated ? 'Last: ' + row.lastUpdated : ''}</span>
+          <span class="status-msg" id="status-${row.rowNumber}"></span>
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("rsvpTable").style.display = "table";
+  }
+
+  function createSelectMarkup(key, rowNum, val) {
+    const rawVal = (val || "").trim();
+    let selectedText = "";
+    if (rawVal.toLowerCase() === "yes" || rawVal.toLowerCase() === "y") {
+      selectedText = "Yes";
+    } else if (rawVal.toLowerCase() === "no" || rawVal.toLowerCase() === "n") {
+      selectedText = "No";
+    }
+    
+    let cssClass = "val-None";
+    if (selectedText === "Yes") {
+      cssClass = "val-Yes";
+    } else if (selectedText === "No") {
+      cssClass = "val-No";
+    }
+    return `
+      <select id="${key}-${rowNum}" class="${cssClass}" onchange="handleSelectChange(this)">
+        <option value="" ${selectedText === "" ? "selected" : ""}></option>
+        <option value="Yes" ${selectedText === "Yes" ? "selected" : ""}>Yes</option>
+        <option value="No" ${selectedText === "No" ? "selected" : ""}>No</option>
+      </select>
+    `;
+  }
+
+  function handleSelectChange(selectEl) {
+    if (selectEl.value === "Yes") {
+      selectEl.className = "val-Yes";
+    } else if (selectEl.value === "No") {
+      selectEl.className = "val-No";
+    } else {
+      selectEl.className = "val-None";
+    }
+  }
+
+  async function updateRow(rowNumber, attendeeName) {
+    const btn = document.getElementById(`btn-${rowNumber}`);
+    const statusSpan = document.getElementById(`status-${rowNumber}`);
+    const timeSpan = document.getElementById(`time-${rowNumber}`);
+
+    const email1 = document.getElementById(`email1-${rowNumber}`).value.trim();
+    const email2 = document.getElementById(`email2-${rowNumber}`).value.trim();
+    const seats = document.getElementById(`seats-${rowNumber}`).value;
+    const grad = document.getElementById(`grad-${rowNumber}`).value;
+    const margs = document.getElementById(`margs-${rowNumber}`).value;
+    const margsDinner = document.getElementById(`margsDinner-${rowNumber}`).value;
+    const wine = document.getElementById(`wine-${rowNumber}`).value;
+    const rottnest = document.getElementById(`rottnest-${rowNumber}`).value;
+
+    btn.textContent = "Syncing...";
+    btn.disabled = true;
+    statusSpan.textContent = "";
+
+    const payload = {
+      rowNumber,
+      attendees: attendeeName,
+      email1,
+      email2,
+      grad,
+      margs,
+      margsDinner,
+      wine,
+      seats,
+      rottnest
+    };
+
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      btn.textContent = "Send or Update Calendar";
+      btn.disabled = false;
+      statusSpan.className = "status-msg status-success";
+      statusSpan.textContent = "✓ Synced";
+      
+      const now = new Date();
+      timeSpan.textContent = "Last: Just now";
+    } catch (err) {
+      console.error(err);
+      btn.textContent = "Send or Update Calendar";
+      btn.disabled = false;
+      statusSpan.className = "status-msg status-error";
+      statusSpan.textContent = "❌ Sync Error";
+    }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/%3C/g, "&lt;").replace(/%3E/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+</script>
+</body>
+</html>
